@@ -1,0 +1,19 @@
+{
+  "name": "osticket",
+  "version": "0.1.0-alpha",
+  "description": "A cool open source ticket discord bot",
+  "main": "Src/Index.js",
+  "scripts": {
+    "dev": "nodemon .",
+    "start": "node ."
+  },
+  "keywords": [],
+  "author": "Dᥲᥒιᥱᥣ",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
+    "mongoose": "^6.8.3"
+  }
+}
