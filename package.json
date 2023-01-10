@@ -1,6 +1,6 @@
 {
   "name": "osticket",
-  "version": "0.1.0-alpha",
+  "version": "0.2.0-alpha",
   "description": "A cool open source ticket discord bot",
   "main": "Src/Index.js",
   "scripts": {
