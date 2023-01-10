@@ -5,7 +5,7 @@ const { readdir } = require("fs");
  * @param {Client} Client 
  */
 
-function Commands(Client)
+module.exports = function Commands(Client)
 {
     readdir("Src/Commands/", (err, files) =>
     {
@@ -20,9 +20,4 @@ function Commands(Client)
             Client.Commands.set(Command.name, Command);
         });
     });
-}
-
-module.exports =
-{
-    LoadCommands: Commands
 }
