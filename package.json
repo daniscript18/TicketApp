@@ -1,19 +1,25 @@
 {
-  "name": "osticket",
-  "version": "0.2.0-alpha",
-  "description": "A cool open source ticket discord bot",
+  "name": "ticketapp",
+  "version": "1.0.0",
+  "description": "The best Discord bot to create Tickets with many features, plus it is open source",
   "main": "Src/Index.js",
   "scripts": {
-    "dev": "nodemon .",
     "start": "node ."
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniscript18/TicketApp.git"
+  },
   "author": "Dᥲᥒιᥱᥣ",
-  "license": "MIT",
+  "license": "unlicense",
+  "bugs": {
+    "url": "https://github.com/daniscript18/TicketApp/issues"
+  },
+  "homepage": "https://github.com/daniscript18/TicketApp#readme",
   "dependencies": {
     "discord.js": "^14.7.1",
-    "dotenv": "^16.0.3",
     "fs": "^0.0.1-security",
-    "mongoose": "^6.8.3"
+    "mongoose": "^6.8.3",
+    "node-recursive-directory": "^1.2.0"
   }
 }

@@ -1,83 +1,53 @@
 const Discord = require("discord.js");
-const Client = new Discord.Client
-({
-    intents: 131071,
-    partials:
-    [
-        Discord.Partials.Channel,
-        Discord.Partials.Message,
-        Discord.Partials.User
-    ]
-});
-
-const Mongoose = require("mongoose");
-const Servers = require("./Models/Servers");
+const Handlers = require("./Handlers/Index");
 const Config = require("./Config");
+const Mongoose = require("mongoose");
 
-Client.Commands = new Discord.Collection();
-require("./Handlers/Commands")(Client);
-
-Client.once("ready", (Client) => console.log(`The bot ${Client.user.username} is ready!`));
-Client.on("messageCreate", async (Message) =>
-{
-    if(Message.author.bot) return;
-    try
+const Client = new Discord.Client
+(
     {
-        let Prefix = (await Servers.findOne({ ServerId: Message.guild.id })).Prefix;
-        if(!Prefix || Prefix == undefined || Prefix == null) Prefix = Config.Prefix;
-        const Command = Message.content.toString().slice(Prefix.length).trim().split(" ")[0];
-        let Arguments = Message.content.slice(Prefix.length).trim();
-        if(Arguments.toLowerCase().startsWith(Command)) Arguments = Arguments.slice(Command.length).trim().split(" ");
-
-        if(!Message.content.startsWith(Prefix)) return;
-        const File = Client.Commands.get(Command);
-        if(!File) return;
-        File.run(Client, Message, Arguments);
-    }
-    catch (e)
-    {
-        console.error(e);
-    }
-
-    if(!await Servers.findOne({ ServerId: Message.guild.id }))
-    {
-        Servers.create
-        ({ 
-            ServerId: Message.guild.id,
-            Prefix: Config.Prefix,
-            TicketCout: 0
+        allowedMentions:
+        {
+            repliedUser: false
         },
-        function(err, res)
+        partials:
+        [
+            Discord.Partials.Channel,
+            Discord.Partials.Message,
+            Discord.Partials.User
+        ],
+        presence:
         {
-            if(err) console.log(err);
-            console.log(res);
-        });
+            activities:
+            [
+                {
+                    name: "This Bot is Open Source",
+                    type: Discord.ActivityType.Watching
+                }
+            ]
+        },
+        intents: 131071
     }
-});
-Client.on("guildMemberAdd", async (Member) =>
-{
-    if(Member.user.bot && Member.user.id === Client.user.id)
+);
+
+Client.Events = new Discord.Collection();
+Client.SlashCommands = new Discord.Collection();
+
+(
+    async () =>
     {
-        if(!await Servers.findOne({ ServerId: Message.guild.id }))
+        await Handlers.LoadEvents(Client, __dirname);
+
+        Client.login(Config.GetToken);
+        Mongoose.set("strictQuery", false);
+        Mongoose.connect(Config.GetMongoUrl)
+            .then(() => console.log("You have connected to the database!"))
+            .catch(e => console.error(e));
+
+        setTimeout(async function ()
         {
-            Servers.create
-            ({ 
-                ServerId: Message.guild.id,
-                Prefix: Config.Prefix,
-                TicketCout: 0
-            },
-            function(err, res)
-            {
-                if(err) console.log(err);
-                console.log(res);
-            });
-        }
+            await Handlers.LoadSlashCommands(Client, __dirname);
+        }, 1000);
+        
     }
-});
-
-Client.login(Config.Token);
-
-Mongoose.set("strictQuery", false);
-Mongoose.connect(Config.Mongoose)
-    .then(() => console.log("You have connected to the database!"))
-    .catch(e => console.error(e));
+)();
